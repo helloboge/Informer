@@ -214,7 +214,8 @@ class Exp_Informer(Exp_Basic):
         print('test shape:', preds.shape, trues.shape)
 
         # result save
-        folder_path = './results/' + setting +'/'
+        # folder_path = './results/' + setting +'/'
+        folder_path = '/kaggle/working/Informer2020/results/' + setting + '/'
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 
@@ -248,7 +249,8 @@ class Exp_Informer(Exp_Basic):
         preds = preds.reshape(-1, preds.shape[-2], preds.shape[-1])
         
         # result save
-        folder_path = './results/' + setting +'/'
+        # folder_path = './results/' + setting +'/'
+        folder_path = '/kaggle/working/Informer2020/results/' + setting + '/'
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
         
