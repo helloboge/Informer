@@ -69,6 +69,9 @@ class Exp_Informer(Exp_Basic):
             'ECL':Dataset_Custom,
             'Solar':Dataset_Custom,
             'custom':Dataset_Custom,
+            'Tianchi_power':Dataset_Custom,
+            'rainning': Dataset_Custom,
+            'london_merged': Dataset_ETT_hour,
         }
         Data = data_dict[self.args.data]
         timeenc = 0 if args.embed!='timeF' else 1
@@ -214,8 +217,8 @@ class Exp_Informer(Exp_Basic):
         print('test shape:', preds.shape, trues.shape)
 
         # result save
-        # folder_path = './results/' + setting +'/'
-        folder_path = '/kaggle/working/Informer2020/results/' + setting + '/'
+        folder_path = './results/' + setting +'/'
+        # folder_path = '/kaggle/working/Informer2020/results/' + setting + '/'
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 
@@ -249,8 +252,8 @@ class Exp_Informer(Exp_Basic):
         preds = preds.reshape(-1, preds.shape[-2], preds.shape[-1])
         
         # result save
-        # folder_path = './results/' + setting +'/'
-        folder_path = '/kaggle/working/Informer2020/results/' + setting + '/'
+        folder_path = './results/' + setting +'/'
+        # folder_path = '/kaggle/working/Informer2020/results/' + setting + '/'
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
         

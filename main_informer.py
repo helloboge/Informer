@@ -6,22 +6,22 @@ from exp.exp_informer import Exp_Informer
 
 parser = argparse.ArgumentParser(description='[Informer] Long Sequences Forecasting')
 
-# parser.add_argument('--model', type=str, required=True, default='informer',help='model of experiment, options: [informer, informerstack, informerlight(TBD)]')
+parser.add_argument('--model', type=str, required=False, default='informer',help='model of experiment, options: [informer, informerstack, informerlight(TBD)]')
+
+parser.add_argument('--data', type=str, required=False, default='london_merged', help='data')
+# parser.add_argument('--model', type=str, default='informer',help='model of experiment, options: [informer, informerstack, informerlight(TBD)]')
 #
-# parser.add_argument('--data', type=str, required=True, default='ETTh1', help='data')
-parser.add_argument('--model', type=str, default='informer',help='model of experiment, options: [informer, informerstack, informerlight(TBD)]')
+# parser.add_argument('--data', type=str, default='WTH', help='data')
+parser.add_argument('--root_path', type=str, default='./data/ETT/', help='root path of the data file')
+# parser.add_argument('--root_path', type=str, default='/kaggle/working/Informer2020/data/ETT/', help='root path of the data file')
 
-parser.add_argument('--data', type=str, default='WTH', help='data')
-# parser.add_argument('--root_path', type=str, default='./data/ETT/', help='root path of the data file')
-parser.add_argument('--root_path', type=str, default='/kaggle/working/Informer2020/data/ETT/', help='root path of the data file')
-
-parser.add_argument('--data_path', type=str, default='WTH.csv', help='data file')
+parser.add_argument('--data_path', type=str, required=False, default='london_merged.csv', help='data file')
 parser.add_argument('--features', type=str, default='M', help='forecasting task, options:[M, S, MS]; M:multivariate predict multivariate, S:univariate predict univariate, MS:multivariate predict univariate')
 parser.add_argument('--target', type=str, default='OT', help='target feature in S or MS task')
 parser.add_argument('--freq', type=str, default='h', help='freq for time features encoding, options:[s:secondly, t:minutely, h:hourly, d:daily, b:business days, w:weekly, m:monthly], you can also use more detailed freq like 15min or 3h')
 
-# parser.add_argument('--checkpoints', type=str, default='./checkpoints/', help='location of model checkpoints')
-parser.add_argument('--checkpoints', type=str, default='/kaggle/working/Informer2020/checkpoints/', help='location of model checkpoints')
+parser.add_argument('--checkpoints', type=str, default='./checkpoints/', help='location of model checkpoints')
+# parser.add_argument('--checkpoints', type=str, default='/kaggle/working/Informer2020/checkpoints/', help='location of model checkpoints')
 
 parser.add_argument('--seq_len', type=int, default=96, help='input sequence length of Informer encoder')
 parser.add_argument('--label_len', type=int, default=48, help='start token length of Informer decoder')
@@ -49,12 +49,12 @@ parser.add_argument('--do_predict', action='store_false', help='whether to predi
 parser.add_argument('--mix', action='store_false', help='use mix attention in generative decoder', default=True)
 parser.add_argument('--cols', type=str, nargs='+', help='certain cols from the data files as the input features')
 parser.add_argument('--num_workers', type=int, default=0, help='data loader num workers')
-parser.add_argument('--itr', type=int, default=2, help='experiments times')
+parser.add_argument('--itr', type=int, default=1, help='experiments times')
 parser.add_argument('--train_epochs', type=int, default=6, help='train epochs')
 parser.add_argument('--batch_size', type=int, default=32, help='batch size of train input data')
 parser.add_argument('--patience', type=int, default=3, help='early stopping patience')
 parser.add_argument('--learning_rate', type=float, default=0.0001, help='optimizer learning rate')
-parser.add_argument('--des', type=str, default='test',help='exp description')
+parser.add_argument('--des', type=str, default='exp',help='test exp description')
 parser.add_argument('--loss', type=str, default='mse',help='loss function')
 parser.add_argument('--lradj', type=str, default='type1',help='adjust learning rate')
 parser.add_argument('--use_amp', action='store_true', help='use automatic mixed precision training', default=False)
@@ -75,6 +75,7 @@ if args.use_gpu and args.use_multi_gpu:
     args.device_ids = [int(id_) for id_ in device_ids]
     args.gpu = args.device_ids[0]
 
+# data：数据文件名，T：标签列，M：预测变量数(如果要预测12个特征，则为[12,12,12]),
 data_parser = {
     'ETTh1':{'data':'ETTh1.csv','T':'OT','M':[7,7,7],'S':[1,1,1],'MS':[7,7,1]},
     'ETTh2':{'data':'ETTh2.csv','T':'OT','M':[7,7,7],'S':[1,1,1],'MS':[7,7,1]},
@@ -83,6 +84,9 @@ data_parser = {
     'WTH':{'data':'WTH.csv','T':'WetBulbCelsius','M':[12,12,12],'S':[1,1,1],'MS':[12,12,1]},
     'ECL':{'data':'ECL.csv','T':'MT_320','M':[321,321,321],'S':[1,1,1],'MS':[321,321,1]},
     'Solar':{'data':'solar_AL.csv','T':'POWER_136','M':[137,137,137],'S':[1,1,1],'MS':[137,137,1]},
+    'Tianchi_power': {'data': 'Tianchi_power.csv', 'T': 'power_consumption', 'M': [2, 2, 2], 'S': [1, 1, 1], 'MS': [2, 2, 1]},
+    'rainning': {'data': 'rainning.csv', 'T': 'rainnum', 'M': [5, 5, 5], 'S': [1, 1, 1],'MS': [5, 5, 1]},
+    'london_merged':{'data':'london_merged.csv','T':'cnt','M':[6,6,6],'S':[1,1,1],'MS':[6,6,1]},
 }
 if args.data in data_parser.keys():
     data_info = data_parser[args.data]
