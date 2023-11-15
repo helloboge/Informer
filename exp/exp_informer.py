@@ -72,6 +72,9 @@ class Exp_Informer(Exp_Basic):
             'Tianchi_power':Dataset_Custom,
             'rainning': Dataset_Custom,
             'london_merged': Dataset_ETT_hour,
+            'df_co_imf0': Dataset_ETT_hour,
+            'df_co_imf1': Dataset_ETT_hour,
+            'df_co_imf2': Dataset_ETT_hour,
         }
         Data = data_dict[self.args.data]
         timeenc = 0 if args.embed!='timeF' else 1
