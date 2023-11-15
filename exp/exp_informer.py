@@ -1,9 +1,9 @@
-from data.data_loader import Dataset_ETT_hour, Dataset_ETT_minute, Dataset_Custom, Dataset_Pred
-from exp.exp_basic import Exp_Basic
-from models.model import Informer, InformerStack
+from Informer2020.data.data_loader import Dataset_ETT_hour, Dataset_ETT_minute, Dataset_Custom, Dataset_Pred
+from Informer2020.exp.exp_basic import Exp_Basic
+from Informer2020.models.model import Informer, InformerStack
 
-from utils.tools import EarlyStopping, adjust_learning_rate
-from utils.metrics import metric
+from Informer2020.utils.tools import EarlyStopping, adjust_learning_rate
+from Informer2020.utils.metrics import metric
 
 import numpy as np
 
