@@ -129,11 +129,12 @@ class Exp_Informer(Exp_Basic):
         train_data, train_loader = self._get_data(flag = 'train')
         vali_data, vali_loader = self._get_data(flag = 'val')
         test_data, test_loader = self._get_data(flag = 'test')
-
+        
+        folder_path = './results/' + setting +'/'
         path = os.path.join(self.args.checkpoints, setting)
         if not os.path.exists(path):
             os.makedirs(path)
-
+        folder_path='/kaggle/working/Informer2020/results/pic/'
         time_now = time.time()
         
         train_steps = len(train_loader)
@@ -189,17 +190,16 @@ class Exp_Informer(Exp_Basic):
                 break
 
             adjust_learning_rate(model_optim, epoch+1, self.args)
-            
+        np.save(folder_path+'train_loss.npy', train_loss)    
         best_model_path = path+'/'+'checkpoint.pth'
         self.model.load_state_dict(torch.load(best_model_path))
         
-        return self.model,train_loss
+        return self.model
 
     def test(self, setting):
         test_data, test_loader = self._get_data(flag='test')
         
         self.model.eval()
-        folder_path='/kaggle/working/Informer2020/results/pic/'
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
             
@@ -242,7 +242,7 @@ class Exp_Informer(Exp_Basic):
         np.save(folder_path+'pred.npy', preds)
         np.save(folder_path+'true.npy', trues)
         np.save(folder_path+'input.npy', inputs)
-        return preds,trues,inputs,metric
+        return 
 
     def predict(self, setting, load=False):
         pred_data, pred_loader = self._get_data(flag='pred')
@@ -265,8 +265,8 @@ class Exp_Informer(Exp_Basic):
         preds = preds.reshape(-1, preds.shape[-2], preds.shape[-1])
         
         # result save
-        folder_path = './results/' + setting +'/'
-        # folder_path = '/kaggle/working/Informer2020/results/' + setting + '/'
+        # folder_path = './results/' + setting +'/'
+        folder_path = '/kaggle/working/Informer2020/results/' + setting + '/'
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
         
