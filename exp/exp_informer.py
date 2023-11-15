@@ -193,34 +193,40 @@ class Exp_Informer(Exp_Basic):
         best_model_path = path+'/'+'checkpoint.pth'
         self.model.load_state_dict(torch.load(best_model_path))
         
-        return self.model
+        return self.model,train_loss
 
     def test(self, setting):
         test_data, test_loader = self._get_data(flag='test')
         
         self.model.eval()
-        
+        folder_path='/kaggle/working/Informer2020/results/pic/'
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+            
         preds = []
         trues = []
-        
+        input = []
         for i, (batch_x,batch_y,batch_x_mark,batch_y_mark) in enumerate(test_loader):
             pred, true = self._process_one_batch(
                 test_data, batch_x, batch_y, batch_x_mark, batch_y_mark)
+            
+            inputs.append(batch_x.detach().cpu().numpy())
             preds.append(pred.detach().cpu().numpy())
             trues.append(true.detach().cpu().numpy())
             
             if i % 20 == 0:
-                input = batch_x.detach().cpu().numpy()
-                gt = np.concatenate((input[0, :, -1], true[0, :, -1]), axis=0)
-                pd = np.concatenate((input[0, :, -1], pred[0, :, -1]), axis=0)
+                inp = batch_x.detach().cpu().numpy()
+                gt = np.concatenate((inp[0, :, -1], true[0, :, -1]), axis=0)
+                pd = np.concatenate((inp[0, :, -1], pred[0, :, -1]), axis=0)
                 visual(gt, pd, os.path.join(folder_path, str(i) + '.pdf'))
-
+        inputs = np.array(inputs)
         preds = np.array(preds)
         trues = np.array(trues)
-        print('test shape:', preds.shape, trues.shape)
+        print('test shape:', preds.shape, trues.shape,'inputs shape:',inputs.shape)
         preds = preds.reshape(-1, preds.shape[-2], preds.shape[-1])
         trues = trues.reshape(-1, trues.shape[-2], trues.shape[-1])
-        print('test shape:', preds.shape, trues.shape)
+        inputs = inputs.reshape(-1, inputs.shape[-2], inputs.shape[-1])
+        print('test shape:', preds.shape, trues.shape,'inputs shape:',inputs.shape)
 
         # result save
         folder_path = './results/' + setting +'/'
@@ -230,12 +236,13 @@ class Exp_Informer(Exp_Basic):
 
         mae, mse, rmse, mape, mspe = metric(preds, trues)
         print('mse:{}, mae:{}'.format(mse, mae))
-
-        np.save(folder_path+'metrics.npy', np.array([mae, mse, rmse, mape, mspe]))
+        metric = np.array([mae, mse, rmse, mape, mspe])
+        
+        np.save(folder_path+'metrics.npy', metric)
         np.save(folder_path+'pred.npy', preds)
         np.save(folder_path+'true.npy', trues)
-
-        return
+        np.save(folder_path+'input.npy', inputs)
+        return preds,trues,inputs,metric
 
     def predict(self, setting, load=False):
         pred_data, pred_loader = self._get_data(flag='pred')
