@@ -5,7 +5,7 @@ import torch.nn.functional as F
 import numpy as np
 
 from math import sqrt
-from utils.masking import TriangularCausalMask, ProbMask
+from Informer2020.utils.masking import TriangularCausalMask, ProbMask
 # from models.softmax_one import softmax_one
 class FullAttention(nn.Module):
     def __init__(self, mask_flag=True, factor=5, scale=None, attention_dropout=0.1, output_attention=False):
