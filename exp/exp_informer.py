@@ -193,9 +193,7 @@ class Exp_Informer(Exp_Basic):
             if early_stopping.early_stop:
                 print("Early stopping")
                 break
-
-            adjust_learning_rate(model_optim, epoch+1, self.args)
-        np.save('/kaggle/working/Informer2020/results/'+setting+'train_loss.npy', train_loss)    
+            adjust_learning_rate(model_optim, epoch+1, self.args)  
         best_model_path = path+'/'+'checkpoint.pth'
         self.model.load_state_dict(torch.load(best_model_path))
         
