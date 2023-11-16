@@ -244,9 +244,9 @@ class Exp_Informer(Exp_Basic):
 
         mae, mse, rmse, mape, mspe = metric(preds, trues)
         print('mse:{}, mae:{}'.format(mse, mae))
-        metric = np.array([mae, mse, rmse, mape, mspe])
+        metrics = np.array([mae, mse, rmse, mape, mspe])
         
-        np.save(folder_path+'metrics.npy', metric)
+        np.save(folder_path+'metrics.npy', metrics)
         np.save(folder_path+'pred.npy', preds)
         np.save(folder_path+'true.npy', trues)
         np.save(folder_path+'input.npy', inputs)
