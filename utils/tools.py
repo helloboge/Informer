@@ -75,7 +75,7 @@ class StandardScaler():
             std = std[-1:]
         return (data * std) + mean
         
-def visual(true, preds=None, name='./test.pdf'):
+def visual(true, preds=None, name='/kaggle/working/Informer2020/results/test.pdf'):
     """
     Results visualization
     """
