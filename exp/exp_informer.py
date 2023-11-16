@@ -217,13 +217,15 @@ class Exp_Informer(Exp_Basic):
                 test_data, batch_x, batch_y, batch_x_mark, batch_y_mark)
             
             inputs.append(batch_x.detach().cpu().numpy())
-            preds.append(pred.detach().cpu().numpy())
-            trues.append(true.detach().cpu().numpy())
+            pred=pred.detach().cpu().numpy()
+            true=true.detach().cpu().numpy()
+            preds.append(pred)
+            trues.append(true)
             
             if i % 20 == 0:
                 inp = batch_x.detach().cpu().numpy()
-                gt = np.concatenate((inp[0, :, -1], true.detach().cpu().numpy()[0, :, -1]), axis=0)
-                pd = np.concatenate((inp[0, :, -1], pred.detach().cpu().numpy()[0, :, -1]), axis=0)
+                gt = np.concatenate((inp[0, :, -1], true[0, :, -1]), axis=0)
+                pd = np.concatenate((inp[0, :, -1], pred[0, :, -1]), axis=0)
                 visual(gt, pd, os.path.join(folder_path, str(i) + '.pdf'))
         inputs = np.array(inputs)
         preds = np.array(preds)
