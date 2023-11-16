@@ -133,7 +133,7 @@ class Exp_Informer(Exp_Basic):
         vali_data, vali_loader = self._get_data(flag = 'val')
         test_data, test_loader = self._get_data(flag = 'test')
         
-        folder_path = '/kaggle/working/Informer2020/results/' + setting + '/'
+        folder_path = '/kaggle/working/Informer2020/results/' + setting + '/pic/'
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
             
@@ -205,7 +205,7 @@ class Exp_Informer(Exp_Basic):
         
         self.model.eval()
         
-        folder_path = '/kaggle/working/Informer2020/results/' + setting + '/'
+        folder_path = '/kaggle/working/Informer2020/results/' + setting + '/pic/'
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
             
@@ -236,7 +236,7 @@ class Exp_Informer(Exp_Basic):
 
         # result save
         # folder_path = './results/' + setting +'/'
-        folder_path = '/kaggle/working/Informer2020/results/' + setting + '/'
+        folder_path = '/kaggle/working/Informer2020/results/' + setting + '/pic/'
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 
@@ -272,7 +272,7 @@ class Exp_Informer(Exp_Basic):
         
         # result save
         # folder_path = './results/' + setting +'/'
-        folder_path = '/kaggle/working/Informer2020/results/' + setting + '/'
+        folder_path = '/kaggle/working/Informer2020/results/' + setting + '/pic/'
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
         
