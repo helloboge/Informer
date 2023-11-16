@@ -134,6 +134,9 @@ class Exp_Informer(Exp_Basic):
         test_data, test_loader = self._get_data(flag = 'test')
         
         folder_path = './results/' + setting +'/'
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+            
         path = os.path.join(self.args.checkpoints, setting)
         if not os.path.exists(path):
             os.makedirs(path)
