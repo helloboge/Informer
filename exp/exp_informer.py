@@ -193,7 +193,8 @@ class Exp_Informer(Exp_Basic):
             if early_stopping.early_stop:
                 print("Early stopping")
                 break
-            adjust_learning_rate(model_optim, epoch+1, self.args)  
+            adjust_learning_rate(model_optim, epoch+1, self.args)
+        np.save(folder_path+'train_loss.npy', train_loss)
         best_model_path = path+'/'+'checkpoint.pth'
         self.model.load_state_dict(torch.load(best_model_path))
         
