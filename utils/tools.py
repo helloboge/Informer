@@ -75,7 +75,7 @@ class StandardScaler():
             std = std[-1:]
         return (data * std) + mean
         
-def visual(true, preds=None, name='./pic/test.pdf'):
+def visual(true, preds=None, name='./test.pdf'):
     """
     Results visualization
     """
