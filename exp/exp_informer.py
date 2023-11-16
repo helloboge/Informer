@@ -137,7 +137,6 @@ class Exp_Informer(Exp_Basic):
         path = os.path.join(self.args.checkpoints, setting)
         if not os.path.exists(path):
             os.makedirs(path)
-        folder_path='/kaggle/working/Informer2020/results/pic/'
         time_now = time.time()
         
         train_steps = len(train_loader)
