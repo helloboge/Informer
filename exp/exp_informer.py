@@ -222,11 +222,11 @@ class Exp_Informer(Exp_Basic):
             preds.append(pred)
             trues.append(true)
             
-            if i % 20 == 0:
-                inp = batch_x.detach().cpu().numpy()
-                gt = np.concatenate((inp[0, :, -1], true[0, :, -1]), axis=0)
-                pd = np.concatenate((inp[0, :, -1], pred[0, :, -1]), axis=0)
-                visual(gt, pd, os.path.join(folder_path, str(i) + '.pdf'))
+            # if i % 20 == 0:
+            #     inp = batch_x.detach().cpu().numpy()
+            #     gt = np.concatenate((inp[0, :, -1], true[0, :, -1]), axis=0)
+            #     pd = np.concatenate((inp[0, :, -1], pred[0, :, -1]), axis=0)
+            #     visual(gt, pd, os.path.join(folder_path, str(i) + '.pdf'))
         inputs = np.array(inputs)
         preds = np.array(preds)
         trues = np.array(trues)
