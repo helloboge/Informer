@@ -247,9 +247,9 @@ class Exp_Informer(Exp_Basic):
         metrics = np.array([mae, mse, rmse, mape, mspe])
         
         np.save(folder_path+'metrics.npy', metrics)
-        np.save(folder_path+'pred.npy', preds)
-        np.save(folder_path+'true.npy', trues)
-        np.save(folder_path+'input.npy', inputs)
+        np.save(folder_path+'preds.npy', preds)
+        np.save(folder_path+'trues.npy', trues)
+        np.save(folder_path+'inputs.npy', inputs)
         return 
 
     def predict(self, setting, load=False):
