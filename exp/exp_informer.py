@@ -224,12 +224,12 @@ class Exp_Informer(Exp_Basic):
 
         mae, mse, rmse, mape, mspe = metric(preds, trues)
         print('mse:{}, mae:{}'.format(mse, mae))
-
+        metrics=np.array([mae, mse, rmse, mape, mspe])
         np.save(folder_path+'metrics.npy', np.array([mae, mse, rmse, mape, mspe]))
         np.save(folder_path+'pred.npy', preds)
         np.save(folder_path+'true.npy', trues)
 
-        return
+        return metrics,preds,trues
 
     def predict(self, setting, load=False):
         pred_data, pred_loader = self._get_data(flag='pred')
@@ -259,7 +259,7 @@ class Exp_Informer(Exp_Basic):
         
         np.save(folder_path+'real_prediction.npy', preds)
         
-        return
+        return preds
 
     def _process_one_batch(self, dataset_object, batch_x, batch_y, batch_x_mark, batch_y_mark):
         batch_x = batch_x.float().to(self.device)
