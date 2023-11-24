@@ -78,7 +78,7 @@ class Exp_Informer(Exp_Basic):
         }
         for i in range(1, 17):
             key = f'df_memd_imf{i}'
-            data_parser[key] = {'data': f'{key}.csv', 'T': 'OT', 'M': [7, 7, 7], 'S': [1, 1, 1], 'MS': [7, 7, 1]}
+            data_parser[key] = {'data': Dataset_ETT_hour}
             
         Data = data_dict[self.args.data]
         timeenc = 0 if args.embed!='timeF' else 1
