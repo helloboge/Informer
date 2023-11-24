@@ -1,9 +1,9 @@
-from data.data_loader import Dataset_ETT_hour, Dataset_ETT_minute, Dataset_Custom, Dataset_Pred
-from exp.exp_basic import Exp_Basic
-from models.model import Informer, InformerStack
+from Informer2020.data.data_loader import Dataset_ETT_hour, Dataset_ETT_minute, Dataset_Custom, Dataset_Pred
+from Informer2020.exp.exp_basic import Exp_Basic
+from Informer2020.models.model import Informer, InformerStack
 
-from utils.tools import EarlyStopping, adjust_learning_rate
-from utils.metrics import metric
+from Informer2020.utils.tools import EarlyStopping, adjust_learning_rate, visual
+from Informer2020.utils.metrics import metric
 
 import numpy as np
 
@@ -72,6 +72,9 @@ class Exp_Informer(Exp_Basic):
             'Tianchi_power':Dataset_Custom,
             'rainning': Dataset_Custom,
             'london_merged': Dataset_ETT_hour,
+            'df_co_imf0': Dataset_ETT_hour,
+            'df_co_imf1': Dataset_ETT_hour,
+            'df_co_imf2': Dataset_ETT_hour,
         }
         Data = data_dict[self.args.data]
         timeenc = 0 if args.embed!='timeF' else 1
@@ -129,11 +132,14 @@ class Exp_Informer(Exp_Basic):
         train_data, train_loader = self._get_data(flag = 'train')
         vali_data, vali_loader = self._get_data(flag = 'val')
         test_data, test_loader = self._get_data(flag = 'test')
-
+        
+        folder_path = '/kaggle/working/Informer2020/results/' + setting + '/pic/'
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+            
         path = os.path.join(self.args.checkpoints, setting)
         if not os.path.exists(path):
             os.makedirs(path)
-
         time_now = time.time()
         
         train_steps = len(train_loader)
@@ -187,9 +193,8 @@ class Exp_Informer(Exp_Basic):
             if early_stopping.early_stop:
                 print("Early stopping")
                 break
-
             adjust_learning_rate(model_optim, epoch+1, self.args)
-            
+        np.save(folder_path+'train_loss.npy', train_loss)
         best_model_path = path+'/'+'checkpoint.pth'
         self.model.load_state_dict(torch.load(best_model_path))
         
@@ -200,36 +205,52 @@ class Exp_Informer(Exp_Basic):
         
         self.model.eval()
         
+        folder_path = '/kaggle/working/Informer2020/results/' + setting + '/pic/'
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+            
         preds = []
         trues = []
-        
+        inputs = []
         for i, (batch_x,batch_y,batch_x_mark,batch_y_mark) in enumerate(test_loader):
             pred, true = self._process_one_batch(
                 test_data, batch_x, batch_y, batch_x_mark, batch_y_mark)
-            preds.append(pred.detach().cpu().numpy())
-            trues.append(true.detach().cpu().numpy())
-
+            
+            inputs.append(batch_x.detach().cpu().numpy())
+            pred=pred.detach().cpu().numpy()
+            true=true.detach().cpu().numpy()
+            preds.append(pred)
+            trues.append(true)
+            
+            # if i % 20 == 0:
+            #     inp = batch_x.detach().cpu().numpy()
+            #     gt = np.concatenate((inp[0, :, -1], true[0, :, -1]), axis=0)
+            #     pd = np.concatenate((inp[0, :, -1], pred[0, :, -1]), axis=0)
+            #     visual(gt, pd, os.path.join(folder_path, str(i) + '.pdf'))
+        inputs = np.array(inputs)
         preds = np.array(preds)
         trues = np.array(trues)
-        print('test shape:', preds.shape, trues.shape)
+        print('test shape:', preds.shape, trues.shape,'inputs shape:',inputs.shape)
         preds = preds.reshape(-1, preds.shape[-2], preds.shape[-1])
         trues = trues.reshape(-1, trues.shape[-2], trues.shape[-1])
-        print('test shape:', preds.shape, trues.shape)
+        inputs = inputs.reshape(-1, inputs.shape[-2], inputs.shape[-1])
+        print('test shape:', preds.shape, trues.shape,'inputs shape:',inputs.shape)
 
         # result save
-        folder_path = './results/' + setting +'/'
-        # folder_path = '/kaggle/working/Informer2020/results/' + setting + '/'
+        # folder_path = './results/' + setting +'/'
+        folder_path = '/kaggle/working/Informer2020/results/' + setting + '/pic/'
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 
         mae, mse, rmse, mape, mspe = metric(preds, trues)
         print('mse:{}, mae:{}'.format(mse, mae))
-        metrics=np.array([mae, mse, rmse, mape, mspe])
-        np.save(folder_path+'metrics.npy', np.array([mae, mse, rmse, mape, mspe]))
-        np.save(folder_path+'pred.npy', preds)
-        np.save(folder_path+'true.npy', trues)
-
-        return metrics,preds,trues
+        metrics = np.array([mae, mse, rmse, mape, mspe])
+        
+        np.save(folder_path+'metrics.npy', metrics)
+        np.save(folder_path+'preds.npy', preds)
+        np.save(folder_path+'trues.npy', trues)
+        np.save(folder_path+'inputs.npy', inputs)
+        return 
 
     def predict(self, setting, load=False):
         pred_data, pred_loader = self._get_data(flag='pred')
@@ -252,14 +273,14 @@ class Exp_Informer(Exp_Basic):
         preds = preds.reshape(-1, preds.shape[-2], preds.shape[-1])
         
         # result save
-        folder_path = './results/' + setting +'/'
-        # folder_path = '/kaggle/working/Informer2020/results/' + setting + '/'
+        # folder_path = './results/' + setting +'/'
+        folder_path = '/kaggle/working/Informer2020/results/' + setting + '/pic/'
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
         
         np.save(folder_path+'real_prediction.npy', preds)
         
-        return preds
+        return
 
     def _process_one_batch(self, dataset_object, batch_x, batch_y, batch_x_mark, batch_y_mark):
         batch_x = batch_x.float().to(self.device)
