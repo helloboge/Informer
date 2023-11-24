@@ -75,6 +75,8 @@ class Exp_Informer(Exp_Basic):
             'df_co_imf0': Dataset_ETT_hour,
             'df_co_imf1': Dataset_ETT_hour,
             'df_co_imf2': Dataset_ETT_hour,
+            f'df_memd_imf{i}': Dataset_ETT_hour,
+            for i in range(1, 17)
         }
         Data = data_dict[self.args.data]
         timeenc = 0 if args.embed!='timeF' else 1
