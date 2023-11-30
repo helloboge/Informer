@@ -231,6 +231,11 @@ class Exp_Informer(Exp_Basic):
             #     gt = np.concatenate((inp[0, :, -1], true[0, :, -1]), axis=0)
             #     pd = np.concatenate((inp[0, :, -1], pred[0, :, -1]), axis=0)
             #     visual(gt, pd, os.path.join(folder_path, str(i) + '.pdf'))
+
+        mae, mse, rmse, mape, mspe = metric(preds, trues)
+        print('mse:{}, mae:{}'.format(mse, mae))
+        metrics = np.array([mae, mse, rmse, mape, mspe])
+        
         inputs = np.array(inputs)
         preds = np.array(preds)
         trues = np.array(trues)
@@ -246,10 +251,6 @@ class Exp_Informer(Exp_Basic):
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 
-        mae, mse, rmse, mape, mspe = metric(preds, trues)
-        print('mse:{}, mae:{}'.format(mse, mae))
-        metrics = np.array([mae, mse, rmse, mape, mspe])
-        
         np.save(folder_path+'metrics.npy', metrics)
         np.save(folder_path+'preds.npy', preds)
         np.save(folder_path+'trues.npy', trues)
