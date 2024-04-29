@@ -63,6 +63,7 @@ class Exp_Informer(Exp_Basic):
         data_dict = {
             'ETTh1':Dataset_ETT_hour,
             'ETTh2':Dataset_ETT_hour,
+            'merdata2018':Dataset_ETT_hour,
             'ETTm1':Dataset_ETT_minute,
             'ETTm2':Dataset_ETT_minute,
             'WTH':Dataset_Custom,
@@ -75,7 +76,6 @@ class Exp_Informer(Exp_Basic):
             'df_co_imf0': Dataset_ETT_hour,
             'df_co_imf1': Dataset_ETT_hour,
             'df_co_imf2': Dataset_ETT_hour,
-            'merdata2018': Dataset_ETT_hour,
         }
         for i in range(1, 17):
             key = f'df_memd_imf{i}'
