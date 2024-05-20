@@ -64,6 +64,7 @@ class Exp_Informer(Exp_Basic):
             'ETTh1':Dataset_ETT_hour,
             'ETTh2':Dataset_ETT_hour,
             'merdata2018':Dataset_Custom,
+            'tempe2020':Dataset_Custom,
             'ETTm1':Dataset_ETT_minute,
             'ETTm2':Dataset_ETT_minute,
             'WTH':Dataset_Custom,
